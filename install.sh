@@ -52,8 +52,16 @@ apt install -y -qq \
     python3-venv \
     git \
     poppler-utils \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
+    curl \
+    wget \
+    || apt install -y -qq \
+    python3 \
+    python3-pip \
+    python3-venv \
+    git \
+    poppler-utils \
     curl \
     wget
 
