@@ -30,7 +30,11 @@ with st.sidebar:
     st.header("⚙️ Pengaturan OCR")
     st.caption("Untuk PDF scan (eksperimental)")
     
-    ocr_enabled = st.checkbox("🔬 Aktifkan OCR", value=True, help="Gunakan OCR untuk PDF scan")
+    ocr_enabled = st.checkbox(
+        "🔬 Aktifkan OCR", 
+        value=True, 
+        help="Gunakan OCR untuk PDF scan yang tidak bisa dibaca langsung"
+    )
     
     if ocr_enabled:
         st.divider()
@@ -39,29 +43,90 @@ with st.sidebar:
         ocr_dpi = st.slider(
             "📐 DPI (Resolusi)", 
             min_value=150, max_value=400, value=OCR_DPI, step=50,
-            help="DPI lebih tinggi = lebih detail tapi lebih lambat"
+            help="""
+            **DPI (Dots Per Inch)** = Resolusi gambar
+            - 150-200: Cepat, cukup untuk scan berkualitas baik
+            - 250-300: Balance akurasi & kecepatan  
+            - 350-400: Akurat, tapi lambat
+            """
         )
         
         # Confidence Threshold
         ocr_confidence = st.slider(
             "🎯 Confidence Threshold", 
             min_value=0.1, max_value=0.9, value=OCR_CONFIDENCE_THRESHOLD, step=0.1,
-            help="Threshold lebih tinggi = lebih akurat tapi bisa miss teks"
+            help="""
+            **Confidence** = Tingkat kepercayaan OCR (0-1)
+            - 0.3-0.4: Tangkap banyak teks (bisa ada noise)
+            - 0.5: Default, balance
+            - 0.7-0.8: Ketat, hanya teks yang jelas
+            """
         )
         
-        # Preprocessing Options
-        st.markdown("**🔧 Preprocessing:**")
-        preprocess = {
-            'grayscale': st.checkbox("Grayscale", value=OCR_PREPROCESSING['grayscale']),
-            'contrast': st.slider("Contrast", 0.5, 3.0, OCR_PREPROCESSING['contrast'], 0.1),
-            'sharpness': st.slider("Sharpness", 0.5, 3.0, OCR_PREPROCESSING['sharpness'], 0.1),
-            'denoise': st.checkbox("Denoise (lambat)", value=OCR_PREPROCESSING['denoise']),
-            'binarize': st.checkbox("Binarize (B&W)", value=OCR_PREPROCESSING['binarize']),
-            'binarize_threshold': 128,
-        }
+        # Preprocessing Options dengan penjelasan
+        with st.expander("🔧 Preprocessing Options", expanded=False):
+            st.caption("**Preprocessing** = Memproses gambar sebelum OCR")
+            
+            preprocess = {
+                'grayscale': st.checkbox(
+                    "⬜ Grayscale", 
+                    value=OCR_PREPROCESSING['grayscale'],
+                    help="Convert ke hitam-putih. Membantu OCR fokus pada teks tanpa warna."
+                ),
+                'contrast': st.slider(
+                    "🔆 Contrast", 0.5, 3.0, OCR_PREPROCESSING['contrast'], 0.1,
+                    help="""
+                    **Contrast** = Perbedaan terang-gelap
+                    - 1.0: Normal
+                    - 1.5-2.0: Teks lebih jelas
+                    - >2.0: Untuk scan pudar
+                    """
+                ),
+                'sharpness': st.slider(
+                    "🔍 Sharpness", 0.5, 3.0, OCR_PREPROCESSING['sharpness'], 0.1,
+                    help="""
+                    **Sharpness** = Ketajaman
+                    - 1.0: Normal
+                    - 1.2-1.5: Teks lebih tajam
+                    - >2.0: Untuk scan blur
+                    """
+                ),
+                'denoise': st.checkbox(
+                    "🧹 Denoise", 
+                    value=OCR_PREPROCESSING['denoise'],
+                    help="""
+                    **Denoise** = Hilangkan noise/titik-titik
+                    ⚠️ Proses lebih lambat
+                    Berguna untuk scan dengan banyak noise/kotor
+                    """
+                ),
+                'binarize': st.checkbox(
+                    "⚫ Binarize (B&W)", 
+                    value=OCR_PREPROCESSING['binarize'],
+                    help="""
+                    **Binarize** = Convert ke pure hitam-putih
+                    Setiap pixel jadi 100% hitam atau 100% putih
+                    Berguna untuk scan dengan background berwarna
+                    """
+                ),
+                'binarize_threshold': 128,
+            }
+            
+            if preprocess['binarize']:
+                preprocess['binarize_threshold'] = st.slider(
+                    "Threshold B&W", 50, 200, 128, 10,
+                    help="Nilai di bawah threshold jadi hitam, di atas jadi putih"
+                )
         
-        if preprocess['binarize']:
-            preprocess['binarize_threshold'] = st.slider("B&W Threshold", 50, 200, 128, 10)
+        st.divider()
+        
+        # Tombol Re-process
+        if st.session_state.get('processed_files'):
+            st.warning("⚠️ Ubah setting lalu upload ulang file untuk menerapkan")
+            if st.button("🔄 Reset & Upload Ulang", type="primary", use_container_width=True):
+                st.session_state.all_results = []
+                st.session_state.processed_files = {}
+                st.rerun()
     else:
         ocr_dpi = OCR_DPI
         ocr_confidence = OCR_CONFIDENCE_THRESHOLD
