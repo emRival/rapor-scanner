@@ -83,8 +83,9 @@ python3 -m venv venv
 source venv/bin/activate
 
 echo -e "${YELLOW}📋 Step 5/6: Install Python dependencies...${NC}"
-pip install --upgrade pip -q
-pip install -r requirements.txt -q
+echo -e "${BLUE}   (Ini mungkin memakan waktu 5-15 menit untuk download ~1GB packages)${NC}"
+pip install --upgrade pip
+pip install -r requirements.txt --progress-bar on
 
 echo -e "${YELLOW}📋 Step 6/6: Create systemd service...${NC}"
 cat > /etc/systemd/system/$SERVICE_NAME.service << EOF
