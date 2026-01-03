@@ -125,7 +125,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 echo ""
 echo -e "${BLUE}╔═══════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║      📊 Rapor Scanner                             ║${NC}"
+echo -e "${BLUE}║      📊 Rapor Scanner                              ║${NC}"
 echo -e "${BLUE}╚═══════════════════════════════════════════════════╝${NC}"
 if systemctl is-active --quiet rapor-scanner; then
     echo -e "   Status: ${GREEN}● Running${NC}"
