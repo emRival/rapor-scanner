@@ -97,7 +97,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=$APP_DIR
-Environment="PATH=$APP_DIR/venv/bin"
+Environment="PATH=$APP_DIR/venv/bin:/usr/local/bin:/usr/bin:/bin"
 ExecStart=$APP_DIR/venv/bin/streamlit run app.py --server.port $SERVICE_PORT --server.address 0.0.0.0 --server.headless true
 Restart=always
 RestartSec=5
