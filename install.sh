@@ -161,3 +161,6 @@ echo -e "   rapor-scanner update   - Update from GitHub"
 echo ""
 echo -e "${BLUE}📁 Directory: $APP_DIR${NC}"
 echo ""
+
+# Run MOTD to show status
+run-parts /etc/update-motd.d/ 2>/dev/null || bash /etc/update-motd.d/99-rapor-scanner
