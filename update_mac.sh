@@ -8,7 +8,7 @@ APP_DIR="$HOME/rapor-scanner"
 
 echo ""
 echo "╔═══════════════════════════════════════════════════╗"
-echo "║      📊 Rapor Scanner - Update                    ║"
+echo "║      📊 Rapor Scanner - Update                     ║"
 echo "╚═══════════════════════════════════════════════════╝"
 echo ""
 
