@@ -14,26 +14,30 @@ Aplikasi untuk mengekstrak nilai dari PDF Rapor K13 (Kurikulum 2013) secara otom
 - 📈 **Grafik Perkembangan** - Analisis trend nilai antar semester
 - 📥 **Export Excel** - Download rekap dalam format Excel
 
-## 🚀 Quick Install (Ubuntu/Debian)
+## 🚀 Installation
 
-### One-Click Installation
+### 🐧 Ubuntu/Debian (One-Click)
 ```bash
 curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh | sudo bash
 ```
 
-### Manual Installation
+### 🍎 macOS
 ```bash
-# Clone repository
+curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install_mac.sh | bash
+```
+
+### 🪟 Windows
+1. Download `install_windows.bat` dari [Release](https://github.com/emRival/rapor-scanner)
+2. Right-click → Run as Administrator
+3. Install [Poppler](https://github.com/oschwartz10612/poppler-windows/releases) untuk OCR
+
+### 📦 Manual Install
+```bash
 git clone https://github.com/emRival/rapor-scanner.git
 cd rapor-scanner
-
-# Install dependencies
-sudo apt install python3 python3-pip python3-venv poppler-utils
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# Run
 streamlit run app.py
 ```
 
