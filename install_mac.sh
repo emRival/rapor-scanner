@@ -16,7 +16,7 @@ NC='\033[0m'
 
 echo -e "${BLUE}"
 echo "╔═══════════════════════════════════════════════════╗"
-echo "║      📊 Rapor Scanner - macOS Installation        ║"
+echo "║      📊 Rapor Scanner - macOS Installation         ║"
 echo "╚═══════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
