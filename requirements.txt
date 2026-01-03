@@ -1,0 +1,27 @@
+# Dependencies for Rapor Scanner App
+# Python 3.9+ required
+# Updated: 2026-01-03
+
+# Core
+streamlit==1.50.0  # Latest stable for Python 3.9
+pandas==2.3.3
+
+# PDF Processing
+pdfplumber==0.11.8
+pdf2image==1.17.0
+
+# OCR (Experimental - for scanned PDFs)
+easyocr==1.7.2
+torch==2.8.0
+
+# Image Processing
+Pillow==11.3.0
+numpy==2.0.2
+
+# Excel Export
+openpyxl==3.1.5
+
+# System Dependencies (install separately):
+# - poppler-utils (for pdf2image)
+#   Ubuntu/Debian: apt install poppler-utils
+#   macOS: brew install poppler

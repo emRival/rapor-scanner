@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*_backup.py
+app_backup.py
+
+# Logs
+*.log
+
+# Test files
+*.pdf
+!sample.pdf
+
+# Streamlit
+.streamlit/secrets.toml
