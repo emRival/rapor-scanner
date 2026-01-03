@@ -9,7 +9,7 @@ import pandas as pd
 import hashlib
 
 # Import from local modules
-from config import APP_TITLE
+from config import APP_TITLE, OCR_DPI, OCR_CONFIDENCE_THRESHOLD, OCR_PREPROCESSING
 from core.extractor import extract_text_digital
 from core.ocr import extract_text_ocr, is_ocr_available
 from core.parser import parse_rapor_data
@@ -24,6 +24,53 @@ st.set_page_config(page_title="Rekap Nilai Rapor K13", layout="wide", page_icon=
 # --- Apply Styles ---
 st.markdown(get_main_css(), unsafe_allow_html=True)
 st.markdown(get_header_html(), unsafe_allow_html=True)
+
+# --- Sidebar: OCR Settings ---
+with st.sidebar:
+    st.header("⚙️ Pengaturan OCR")
+    st.caption("Untuk PDF scan (eksperimental)")
+    
+    ocr_enabled = st.checkbox("🔬 Aktifkan OCR", value=True, help="Gunakan OCR untuk PDF scan")
+    
+    if ocr_enabled:
+        st.divider()
+        
+        # DPI Setting
+        ocr_dpi = st.slider(
+            "📐 DPI (Resolusi)", 
+            min_value=150, max_value=400, value=OCR_DPI, step=50,
+            help="DPI lebih tinggi = lebih detail tapi lebih lambat"
+        )
+        
+        # Confidence Threshold
+        ocr_confidence = st.slider(
+            "🎯 Confidence Threshold", 
+            min_value=0.1, max_value=0.9, value=OCR_CONFIDENCE_THRESHOLD, step=0.1,
+            help="Threshold lebih tinggi = lebih akurat tapi bisa miss teks"
+        )
+        
+        # Preprocessing Options
+        st.markdown("**🔧 Preprocessing:**")
+        preprocess = {
+            'grayscale': st.checkbox("Grayscale", value=OCR_PREPROCESSING['grayscale']),
+            'contrast': st.slider("Contrast", 0.5, 3.0, OCR_PREPROCESSING['contrast'], 0.1),
+            'sharpness': st.slider("Sharpness", 0.5, 3.0, OCR_PREPROCESSING['sharpness'], 0.1),
+            'denoise': st.checkbox("Denoise (lambat)", value=OCR_PREPROCESSING['denoise']),
+            'binarize': st.checkbox("Binarize (B&W)", value=OCR_PREPROCESSING['binarize']),
+            'binarize_threshold': 128,
+        }
+        
+        if preprocess['binarize']:
+            preprocess['binarize_threshold'] = st.slider("B&W Threshold", 50, 200, 128, 10)
+    else:
+        ocr_dpi = OCR_DPI
+        ocr_confidence = OCR_CONFIDENCE_THRESHOLD
+        preprocess = OCR_PREPROCESSING
+    
+    st.divider()
+    st.markdown("**📊 Resource:**")
+    st.caption("Min: 2GB RAM, 2 CPU")
+    st.caption("Rec: 4GB RAM untuk OCR")
 
 # --- Upload Section ---
 col_upload, col_info = st.columns([2, 1])
@@ -44,7 +91,7 @@ if 'processed_files' not in st.session_state:
     st.session_state.processed_files = {}
 
 
-def process_uploaded_files(files):
+def process_uploaded_files(files, use_ocr=True, dpi=200, confidence=0.5, preprocess_opts=None):
     """Process uploaded PDF files"""
     progress = st.progress(0)
     new_count = 0
@@ -66,9 +113,14 @@ def process_uploaded_files(files):
         
         # Try OCR if digital fails
         is_ocr = False
-        if error and is_ocr_available():
-            with st.spinner(f"🔬 [EKSPERIMENTAL] OCR: {pdf_file.name}..."):
-                text, ocr_error = extract_text_ocr(content)
+        if error and use_ocr and is_ocr_available():
+            with st.spinner(f"🔬 [EKSPERIMENTAL] OCR: {pdf_file.name} (DPI:{dpi}, Conf:{confidence})..."):
+                text, ocr_error = extract_text_ocr(
+                    content, 
+                    dpi=dpi, 
+                    confidence=confidence,
+                    preprocess_settings=preprocess_opts
+                )
             if text:
                 error = None
                 is_ocr = True
@@ -114,7 +166,13 @@ def process_uploaded_files(files):
 
 # --- Process Files ---
 if uploaded_files:
-    new_count, errors, warnings = process_uploaded_files(uploaded_files)
+    new_count, errors, warnings = process_uploaded_files(
+        uploaded_files, 
+        use_ocr=ocr_enabled,
+        dpi=ocr_dpi,
+        confidence=ocr_confidence,
+        preprocess_opts=preprocess
+    )
     
     if new_count > 0:
         st.success(f"✅ {new_count} file berhasil diproses")
