@@ -111,6 +111,34 @@ systemctl daemon-reload
 systemctl enable $SERVICE_NAME
 systemctl start $SERVICE_NAME
 
+# Install CLI tool
+echo -e "${YELLOW}📋 Installing CLI tool...${NC}"
+cp $APP_DIR/rapor-scanner /usr/local/bin/rapor-scanner
+chmod +x /usr/local/bin/rapor-scanner
+
+# Create MOTD
+cat > /etc/update-motd.d/99-rapor-scanner << 'MOTD'
+#!/bin/bash
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+NC='\033[0m'
+echo ""
+echo -e "${BLUE}╔═══════════════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║      📊 Rapor Scanner                             ║${NC}"
+echo -e "${BLUE}╚═══════════════════════════════════════════════════╝${NC}"
+if systemctl is-active --quiet rapor-scanner; then
+    echo -e "   Status: ${GREEN}● Running${NC}"
+else
+    echo -e "   Status: ${RED}● Stopped${NC}"
+fi
+IP=$(hostname -I | awk '{print $1}')
+echo -e "   URL:    http://$IP:8501"
+echo -e "   CLI:    rapor-scanner [status|start|stop|restart|logs|update]"
+echo ""
+MOTD
+chmod +x /etc/update-motd.d/99-rapor-scanner
+
 # Get IP address
 IP=$(hostname -I | awk '{print $1}')
 
@@ -123,12 +151,13 @@ echo -e "${BLUE}📍 Access URL:${NC}"
 echo -e "   Local:   http://localhost:$SERVICE_PORT"
 echo -e "   Network: http://$IP:$SERVICE_PORT"
 echo ""
-echo -e "${BLUE}🔧 Manage Service:${NC}"
-echo -e "   Status:  systemctl status $SERVICE_NAME"
-echo -e "   Stop:    systemctl stop $SERVICE_NAME"
-echo -e "   Start:   systemctl start $SERVICE_NAME"
-echo -e "   Restart: systemctl restart $SERVICE_NAME"
-echo -e "   Logs:    journalctl -u $SERVICE_NAME -f"
+echo -e "${BLUE}🔧 CLI Commands:${NC}"
+echo -e "   rapor-scanner status   - Show status"
+echo -e "   rapor-scanner start    - Start service"
+echo -e "   rapor-scanner stop     - Stop service"
+echo -e "   rapor-scanner restart  - Restart service"
+echo -e "   rapor-scanner logs     - View logs"
+echo -e "   rapor-scanner update   - Update from GitHub"
 echo ""
 echo -e "${BLUE}📁 Directory: $APP_DIR${NC}"
 echo ""
