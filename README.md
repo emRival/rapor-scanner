@@ -18,6 +18,10 @@ Aplikasi untuk mengekstrak nilai dari PDF Rapor K13 (Kurikulum 2013) secara otom
 
 ### 🐧 Ubuntu/Debian (One-Click)
 ```bash
+# Jika sudah root:
+curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh | bash
+
+# Jika user biasa:
 curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh | sudo bash
 ```
 

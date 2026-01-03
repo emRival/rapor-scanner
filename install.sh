@@ -4,11 +4,11 @@
 # For Ubuntu/Debian (LXC, VPS, Server)
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh | sudo bash
+#   Sebagai root:
+#     curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh | bash
 #
-# Or download and run:
-#   wget -qO install.sh https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh
-#   chmod +x install.sh && sudo ./install.sh
+#   Sebagai user biasa:
+#     curl -sSL https://raw.githubusercontent.com/emRival/rapor-scanner/main/install.sh | sudo bash
 #
 
 set -e
