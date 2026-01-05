@@ -56,8 +56,8 @@ def create_excel_report(display_data, mapel_list, mapel_short):
     
     col_idx = 3
     for mapel in mapel_list:
-        short_name = mapel_short.get(mapel, mapel[:15])
-        ws.cell(row=1, column=col_idx, value=short_name)
+        # Gunakan nama lengkap mata pelajaran, jangan disingkat
+        ws.cell(row=1, column=col_idx, value=mapel)
         ws.merge_cells(start_row=1, start_column=col_idx, end_row=1, end_column=col_idx+2)
         ws.cell(row=2, column=col_idx, value="P")
         ws.cell(row=2, column=col_idx+1, value="K")
